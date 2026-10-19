@@ -1,124 +1,257 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>Ultraviolet | Sophisticated Web Proxy</title>
-		<meta
-			name="description"
-			content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#434c5e"
-		/>
-		<meta name="googlebot" content="index, follow, snippet" />
-		<link rel="shortcut icon" content="favicon.ico" />
-		<link rel="stylesheet" href="index.css" />
-		
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Portal</title>
+    <style>
+        /* Cosmic Genesis Dark Aesthetics */
+        :root {
+            --space-bg: #090811;
+            --ruby-core: #ff2a5f;
+            --ruby-glow: rgba(255, 42, 95, 0.6);
+            --nebula-purple: #8a2be2;
+            --text-light: #f1f1f7;
+        }
 
-		<script src="baremux/index.js"></script>
-		<script src="uv/uv.bundle.js"></script>
-		<script src="uv/uv.config.js"></script>
+        body {
+            background: radial-gradient(circle at center, #1b122e 0%, var(--space-bg) 70%);
+            color: var(--text-light);
+            font-family: 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
 
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
-	</head>
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+        }
 
-	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
-		</div>
+        /* Animated Glowing Ruby Planet Logo */
+        .logo-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+        }
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://www.google.com/search?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
-		</footer>
-		<iframe style="display: none" id="uv-frame"></iframe>
-		<script src="register-sw.js"></script>
-		<script src="search.js"></script>
-		<script src="index.js"></script>
-	</body>
+        .ruby-planet {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #ff5e84, var(--ruby-core) 60%, #800020 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 40px var(--ruby-glow), inset -10px -10px 30px rgba(0,0,0,0.7);
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Sci-Fi Planetary Ring */
+        .planet-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180px;
+            height: 40px;
+            border: 6px solid rgba(255, 42, 95, 0.4);
+            border-top-color: transparent;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            box-shadow: 0 5px 15px rgba(255, 42, 95, 0.2);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ffffff, var(--ruby-core), var(--nebula-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: #8fa0dd;
+            font-size: 0.9rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        /* Cyberpunk Input & Launch Systems */
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 60px auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            background: rgba(18, 15, 36, 0.8);
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--ruby-core);
+            box-shadow: 0 0 20px rgba(255, 42, 95, 0.3), inset 0 0 10px rgba(255, 42, 95, 0.1);
+        }
+
+        button {
+            padding: 0 35px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--ruby-core), var(--nebula-purple));
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px var(--ruby-glow);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px #ff2a5f;
+        }
+
+        /* Sector Grid Layout (Games/Apps) */
+        .sector-title {
+            text-align: left;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            color: #a5b4fc;
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .node-card {
+            background: rgba(20, 16, 41, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 16px;
+            padding: 30px 20px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .node-card:hover {
+            transform: scale(1.05);
+            border-color: var(--ruby-core);
+            background: rgba(31, 22, 59, 0.8);
+            box-shadow: 0 10px 30px rgba(255, 42, 95, 0.15);
+        }
+
+        .node-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+        }
+
+        .node-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #e2e8f0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+    <!-- Imports a clean sci-fi font cluster -->
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!-- Ruby Planet Canvas Element Asset Frame -->
+    <div class="logo-container">
+        <div class="ruby-planet"></div>
+        <div class="planet-ring"></div>
+    </div>
+
+    <h1>Genesis</h1>
+    <div class="subtitle">System Unblock Engine</div>
+
+    <!-- Proxy Terminal Core Input -->
+    <div class="search-wrapper">
+        <input type="text" id="target-node" placeholder="Coordinate Vector or URL Destination..." autocomplete="off">
+        <button onclick="engageProxy()">Engage</button>
+    </div>
+
+    <!-- Grid Layout Array -->
+    <div class="sector-title">// Entertainment Nodes Available</div>
+    <div class="grid">
+        <div class="node-card" onclick="overrideNode('https://example.com')">
+            <div class="node-icon">🌌</div>
+            <h3>Nexus Strike</h3>
+        </div>
+        <div class="node-card" onclick="overrideNode('https://example.com')">
+            <div class="node-icon">🔺</div>
+            <h3>Vector Run</h3>
+        </div>
+        <div class="node-card" onclick="overrideNode('https://example.com')">
+            <div class="node-icon">💎</div>
+            <h3>Core Miner</h3>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Logic to route the URL through your proxy backend
+    function engageProxy() {
+        const input = document.getElementById('target-node').value;
+        if (!input) return;
+        
+        let destination = input;
+        if (!/^https?:\/\//i.test(input)) {
+            destination = 'https://' + input;
+        }
+
+        // Adjust path based on your exact proxy engine
+        // Standard UV defaults to '/__uv/service/', Node-unblocker uses '/proxy/'
+        const proxyPrefix = '/proxy/'; 
+        window.location.href = window.location.origin + proxyPrefix + btoa(destination);
+    }
+
+    function overrideNode(nodeUrl) {
+        const proxyPrefix = '/proxy/';
+        window.location.href = window.location.origin + proxyPrefix + btoa(nodeUrl);
+    }
+</script>
+
+</body>
 </html>
+
