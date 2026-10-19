@@ -3,299 +3,577 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis Proxy Dashboard</title>
+    <title>Genesis Network Terminal</title>
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Orbitron:wght@500;800&family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Mandatory structural linking paths matching production Bare/Wisp/UV standards -->
+    <script src="uv/uv.config.js" defer></script>
     
     <style>
         :root {
-            --bg-color: #0b0b12;
-            --panel-bg: #141423;
-            --neon-pink: #ff2a74;
-            --neon-cyan: #00f0ff;
-            --neon-purple: #9d4edd;
-            --text-main: #f0f0f8;
-            --text-muted: #8a8a9e;
+            --bg-dark: #06060c;
+            --panel-bg: rgba(15, 15, 30, 0.7);
+            --neon-pink: #ff0055;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #8200ff;
+            --text-main: #ffffff;
+            --text-muted: #6b6b85;
+            --accent-glow: rgba(0, 243, 255, 0.25);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Play', sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(at 50% 0%, rgba(255, 42, 116, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(0, 240, 255, 0.1) 0px, transparent 40%);
+                radial-gradient(circle at 50% 10%, rgba(130, 0, 255, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 90% 90%, rgba(255, 0, 85, 0.08) 0%, transparent 40%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            padding: 40px 20px;
+            overflow: hidden;
         }
 
-        /* Active App State Wrapper */
-        #mainUi {
-            width: 100%;
+        /* Fancy Cyber Scanline FX */
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
+            z-index: 99999;
+            opacity: 0.3;
+            pointer-events: none;
+            background-size: 100% 4px, 4px 100%;
+        }
+
+        /* App Wrapper Layout Matrix */
+        #viewportWrapper {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-
-        .brand-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .brand-header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-            animation: pulse 3s infinite alternate;
-        }
-
-        /* Proxy Search Engine Component */
-        .search-container {
             width: 100%;
-            max-width: 650px;
+            height: 100vh;
             position: relative;
-            margin-bottom: 45px;
         }
 
-        .search-bar {
-            width: 100%;
-            padding: 16px 24px;
-            padding-left: 55px;
-            background: rgba(20, 20, 35, 0.75);
-            border: 2px solid var(--neon-purple);
-            border-radius: 50px;
-            font-family: 'Play', sans-serif;
-            font-size: 1.1rem;
-            color: #fff;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+        /* Dynamic Nav Control Topbar similar to premium portal hubs */
+        .system-topbar {
+            background: #090912;
+            border-bottom: 2px solid var(--neon-purple);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
         }
 
-        .search-bar:focus {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 25px rgba(255, 42, 116, 0.4);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 22px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        /* Custom Dashboard Config options */
-        .config-panel {
-            margin-bottom: 20px;
-            background: rgba(20, 20, 35, 0.6);
-            padding: 8px 16px;
-            border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.85rem;
-        }
-        
-        .config-panel select {
-            background: #000;
-            color: var(--neon-cyan);
-            border: 1px solid var(--neon-purple);
-            padding: 3px 8px;
-            border-radius: 4px;
-            outline: none;
+        .system-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
             cursor: pointer;
         }
 
-        /* System Grid Layout */
-        .dashboard-section {
-            width: 100%;
-            max-width: 800px;
+        .tab-controller-pool {
+            display: flex;
+            gap: 8px;
+            max-width: 50%;
+            overflow-x: auto;
         }
 
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            color: var(--neon-cyan);
-            margin-bottom: 20px;
-            text-transform: uppercase;
+        .proxy-tab-node {
+            background: #121224;
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 6px 16px;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 110px));
-            gap: 24px;
+        .proxy-tab-node.active-tab {
+            background: var(--panel-bg);
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(0,243,255,0.15);
+        }
+
+        .kill-tab-btn {
+            color: var(--neon-pink);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Primary Menu Dashboard Container Layer */
+        .portal-home-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            background: rgba(20, 20, 35, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+            padding: 40px 20px;
+            overflow-y: auto;
+            position: absolute;
+            top: 55px; left: 0; right: 0; bottom: 0;
+            z-index: 10;
+            background: var(--bg-dark);
         }
 
-        .game-card {
+        .main-brand-banner {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-brand-banner h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 14px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-purple);
+            animation: identityPulse 4s infinite alternate;
+        }
+
+        /* Upgraded Search Input Bar with embedded Engine Processing */
+        .search-container-box {
+            width: 100%;
+            max-width: 720px;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .search-bar-element {
+            width: 100%;
+            padding: 20px 30px;
+            padding-left: 70px;
+            background: rgba(14, 14, 28, 0.9);
+            border: 2px solid var(--neon-purple);
+            border-radius: 50px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.3rem;
+            color: #fff;
+            outline: none;
+            box-shadow: 0 0 25px rgba(130, 0, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .search-bar-element:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.4), inset 0 0 15px rgba(255, 0, 85, 0.1);
+        }
+
+        .search-engine-icon {
+            position: absolute;
+            left: 26px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 6px var(--neon-cyan));
+        }
+
+        /* System Game Library Grids UI Layout */
+        .library-section-frame {
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .library-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--neon-cyan);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 12px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .apps-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(115px, 115px));
+            gap: 26px;
+            justify-content: center;
+            background: rgba(11, 11, 22, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 35px;
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .app-node-card {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-decoration: none;
             color: inherit;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25);
         }
 
-        .game-card:hover { transform: translateY(-5px); }
+        .app-node-card:hover { transform: translateY(-8px); }
 
-        .icon-wrapper {
-            width: 75px;
-            height: 75px;
-            background: var(--panel-bg);
-            border: 2px solid #2a2a40;
-            border-radius: 18px;
+        .icon-box-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #111122;
+            border: 2px solid #22223b;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.3rem;
+            margin-bottom: 12px;
             transition: all 0.3s ease;
         }
 
-        /* Color profiles */
-        .game-card:nth-child(3n+1) .icon-wrapper { border-color: var(--neon-pink); }
-        .game-card:nth-child(3n+2) .icon-wrapper { border-color: var(--neon-cyan); }
-        .game-card:nth-child(3n+3) .icon-wrapper { border-color: var(--neon-purple); }
-        .game-card:hover .icon-wrapper { box-shadow: 0 0 20px currentColor; border-color: #fff; }
+        /* Cyber Color Grid Distributions */
+        .app-node-card:nth-child(4n+1) .icon-box-wrapper { border-color: var(--neon-pink); }
+        .app-node-card:nth-child(4n+2) .icon-box-wrapper { border-color: var(--neon-cyan); }
+        .app-node-card:nth-child(4n+3) .icon-box-wrapper { border-color: var(--neon-purple); }
+        .app-node-card:nth-child(4n+4) .icon-box-wrapper { border-color: #ffaa00; }
+        .app-node-card:hover .icon-box-wrapper { box-shadow: 0 0 25px currentColor; border-color: #fff; }
 
-        .game-title {
-            font-size: 0.85rem;
+        .app-label-title {
+            font-size: 0.95rem;
+            font-weight: 700;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
+            color: #cccce0;
+            text-transform: uppercase;
         }
 
-        .add-card .icon-wrapper { border: 2px dashed var(--text-muted); background: transparent; color: var(--text-muted); }
-        .add-card:hover .icon-wrapper { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+        .app-node-card:hover .app-label-title { color: #fff; }
 
-        /* Embedded Proxy Viewframe Window Layer */
-        #proxyViewport {
+        .import-trigger-node .icon-box-wrapper { border: 2px dashed var(--text-muted); background: transparent; color: var(--text-muted); }
+        .import-trigger-node:hover .icon-box-wrapper { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+        /* Multi-Tab Render Sandbox Viewport Panel Layers */
+        .sandbox-iframe-viewport-container {
             display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000;
-            z-index: 1000;
-            flex-direction: column;
-        }
-
-        .viewport-header {
-            background: var(--panel-bg);
-            border-bottom: 2px solid var(--neon-purple);
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .viewport-title {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-cyan);
-            font-size: 0.9rem;
-        }
-
-        .close-btn {
-            background: var(--neon-pink);
-            color: #fff;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 4px;
-            font-family: 'Play', sans-serif;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 42, 116, 0.4);
-        }
-
-        .proxy-frame {
             width: 100%;
             flex-grow: 1;
-            border: none;
-            background: #fff;
+            position: absolute;
+            top: 55px; left: 0; bottom: 0; right: 0;
+            z-index: 5;
+            background: #000;
         }
 
-        /* Modal Overlay configuration */
-        .modal {
+        .sandbox-iframe-viewport-container.active-view { display: block; }
+        .render-frame-node { width: 100%; height: 100%; border: none; background: #fff; }
+
+        /* Dynamic Popups Modals Config configurations */
+        .modal-mask-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 10, 0.85);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: var(--panel-bg);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 16px;
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
-        .form-input { width: 100%; padding: 10px 14px; background: #0b0b12; border: 1px solid #2a2a40; border-radius: 8px; color: #fff; outline: none; }
-        .form-input:focus { border-color: var(--neon-cyan); }
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Play', sans-serif; }
-        .btn-primary { background: var(--neon-cyan); color: #000; }
-        .btn-secondary { background: #2a2a40; color: #fff; }
-
-        @keyframes pulse {
-            0% { text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-cyan); }
-            100% { text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Main Client Dashboard Layout Panel -->
-    <div id="mainUi">
-        <div class="brand-header">
-            <h1>Genesis</h1>
-        </div>
-
-        <!-- Global Proxy Backend Instance Selector -->
-        <div class="config-panel">
-            <label for="proxyWorker">Proxy Node Gateway: </label>
-            <select id="proxyWorker">
-                <option value="https://allorigins.win">Node Alpha (AllOrigins Relay)</option>
-                <option value="https://corsproxy.io?">Node Beta (CorsProxy Edge)</option>
-                <option value="direct">Direct Engine (No Proxy Routing)</option>
-            </select>
-        </div>
-
-        <!-- Active Search Input Element -->
-        <div class="search-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-bar" id="searchBar" placeholder="Launch game app URL or search via proxy...">
-        </div>
-
-        <div class="dashboard-section">
-            <h2 class="section-title">🎮 Proxy Web Library</h2
+// Tab system track states memory allocations
+let globalTabCollection = [];
+let primaryActiveTabId = null;
+window.onload = function() {
+renderImportedLibraryNodes();
+};
+// Core Proxy URL resolution mapping function matching Ultraviolet syntax requirements
+function resolveProxiedUrlString(inputQueryString) {
+let processedUrlString = inputQueryString.trim();
+// DuckDuckGo routing fallback validation check loops
+if (!processedUrlString.includes('.') || processedUrlString.includes(' ')) {
+// Generates a clean, fully functional server-compliant search string parsed explicitly via standard search query logic
+processedUrlString = 'duckduckgo.com' + encodeURIComponent(processedUrlString);
+} else if (!processedUrlString.startsWith('http://') && !processedUrlString.startsWith('https://')) {
+processedUrlString = 'https://' + processedUrlString;
+}
+// Checks verification layers for client engine variables matching local ultraviolet bundles
+if (typeof __uv$config !== 'undefined') {
+return __uv$config.prefix + __uv$config.encodeUrl(processedUrlString);
+} else {
+// Fallback default routing scenario loop maps natively if background worker systems disconnect
+return processedUrlString;
+}
+}
+// Tab allocation manager engine blocks
+function spawnProxyTab(targetDestinationRawLink, dynamicTabDisplayTitle) {
+const structuralTabId = 'tab_node_' + Date.now();
+const finalProcessedProxyUrl = resolveProxiedUrlString(targetDestinationRawLink);
+// Build out clean title logs
+let titleLog = dynamicTabDisplayTitle || targetDestinationRawLink;
+if (titleLog.length > 18) titleLog = titleLog.substring(0, 15) + '...';
+// Generate structural components and inject straight down to execution spaces
+const wrapperFrameContainer = document.createElement('div');
+wrapperFrameContainer.id = 'viewport_frame_' + structuralTabId;
+wrapperFrameContainer.className = 'sandbox-iframe-viewport-container';
+wrapperFrameContainer.innerHTML = <iframe class="render-frame-node" id="iframe_element_${structuralTabId}" src="${finalProcessedProxyUrl}"></iframe>;
+document.getElementById('viewportWrapper').appendChild(wrapperFrameContainer);
+// Commit settings straight down memory index matrices
+globalTabCollection.push({
+id: structuralTabId,
+title: titleLog,
+url: finalProcessedProxyUrl
+});
+rebuildTabInterfaceRowBar();
+switchActiveTabContext(structuralTabId);
+}
+function rebuildTabInterfaceRowBar() {
+const containerNode = document.getElementById('activeTabsPoolContainer');
+containerNode.innerHTML = '';
+globalTabCollection.forEach(tab => {
+const tabElement = document.createElement('div');
+tabElement.className = proxy-tab-node ${tab.id === primaryActiveTabId ? 'active-tab' : ''};
+tabElement.setAttribute('onclick', switchActiveTabContext('${tab.id}'));
+tabElement.innerHTML = <span>${tab.title}</span> <span class="kill-tab-btn" onclick="terminateTabInstance(event, '${tab.id}')">×</span>;
+containerNode.appendChild(tabElement);
+});
+}
+function switchActiveTabContext(targetTabId) {
+primaryActiveTabId = targetTabId;
+// Hide Dashboard Front-page layers out cleanly
+document.getElementById('genesisDashboardScreen').style.display = 'none';
+// Reset standard viewing classes down across all target frames
+document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
+view.classList.remove('active-view');
+});
+// Make chosen focus asset tab visible onto viewport canvas
+const focalTargetFrame = document.getElementById('viewport_frame_' + targetTabId);
+if (focalTargetFrame) {
+focalTargetFrame.classList.add('active-view');
+}
+rebuildTabInterfaceRowBar();
+}
+function navigateToDashboardHome() {
+primaryActiveTabId = null;
+document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
+view.classList.remove('active-view');
+});
+document.getElementById('genesisDashboardScreen').style.display = 'flex';
+rebuildTabInterfaceRowBar();
+}
+function terminateTabInstance(eventObject, targetTabIdToKill) {
+eventObject.stopPropagation(); // Avoid triggering switch context loops on parent element clicks
+// Purge active DOM node structures directly from layout space
+const targetDomFrame = document.getElementById('viewport_frame_' + targetTabIdToKill);
+if (targetDomFrame) {
+// Wipe source clean first to safely terminate background game audio cycles instantly
+const insideIframe = document.getElementById(iframe_element_${targetTabIdToKill});
+if (insideIframe) insideIframe.src = 'about:blank';
+targetDomFrame.remove();
+}
+// Remove tracked item reference arrays out from index caches
+globalTabCollection = globalTabCollection.filter(tab => tab.id !== targetTabIdToKill);
+if (primaryActiveTabId === targetTabIdToKill) {
+if (globalTabCollection.length > 0) {
+switchActiveTabContext(globalTabCollection[globalTabCollection.length - 1].id);
+} else {
+navigateToDashboardHome();
+}
+} else {
+rebuildTabInterfaceRowBar();
+}
+}
+// Catch enter command triggers down across text field layers
+document.getElementById('proxySearchEngineMainField').addEventListener('keydown', function(e) {
+if (e.key === 'Enter' && this.value.trim()) {
+spawnProxyTab(this.value, this.value);
+this.value = ''; // Flush bar context space out immediately following execution
+}
+});
+// Dynamic Modals Framework Actions
+function openImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'flex'; }
+function closeImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'none'; }
+function commitSaveImportedNode() {
+const label = document.getElementById('wizardInputName').value.trim();
+const link = document.getElementById('wizardInputUrl').value.trim();
+let iconSymbol = document.getElementById('wizardInputIcon').value.trim() || '🎮';
+if (!label || !link) return alert('Deployment Failure: Required source properties are currently missing fields.');
+let activeCacheList = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
+activeCacheList.push({ label, link, iconSymbol });
+localStorage.setItem('genesis_premium_library', JSON.stringify(activeCacheList));
+renderImportedLibraryNodes();
+closeImportWizardModal();
+document.getElementById('wizardInputName').value = '';
+document.getElementById('wizardInputUrl').value = '';
+document.getElementById('wizardInputIcon').value = '';
+}
+function renderImportedLibraryNodes() {
+document.querySelectorAll('.runtime-loaded-custom-card').forEach(card => card.remove());
+const displayTargetGrid = document.getElementById('appsLibraryContainerNode');
+const insertBeforePlaceholderNode = document.querySelector('.import-trigger-node');
+const collectionCache = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
+collectionCache.forEach(nodeItem => {
+const nodeCardDiv = document.createElement('div');
+nodeCardDiv.className = "app-node-card runtime-loaded-custom-card";
+nodeCardDiv.onclick = function() { spawnProxyTab(nodeItem.link, nodeItem.label); };
+nodeCardDiv.innerHTML = <div class="icon-box-wrapper">${nodeItem.iconSymbol}</div> <div class="app-label-title">${nodeItem.label}</div>;
+displayTargetGrid.insertBefore(nodeCardDiv, insertBeforePlaceholderNode);
+});
+}// Tab system track states memory allocations
+let globalTabCollection = [];
+let primaryActiveTabId = null;
+window.onload = function() {
+renderImportedLibraryNodes();
+};
+// Core Proxy URL resolution mapping function matching Ultraviolet syntax requirements
+function resolveProxiedUrlString(inputQueryString) {
+let processedUrlString = inputQueryString.trim();
+// DuckDuckGo routing fallback validation check loops
+if (!processedUrlString.includes('.') || processedUrlString.includes(' ')) {
+// Generates a clean, fully functional server-compliant search string parsed explicitly via standard search query logic
+processedUrlString = 'duckduckgo.com' + encodeURIComponent(processedUrlString);
+} else if (!processedUrlString.startsWith('http://') && !processedUrlString.startsWith('https://')) {
+processedUrlString = 'https://' + processedUrlString;
+}
+// Checks verification layers for client engine variables matching local ultraviolet bundles
+if (typeof __uv$config !== 'undefined') {
+return __uv$config.prefix + __uv$config.encodeUrl(processedUrlString);
+} else {
+// Fallback default routing scenario loop maps natively if background worker systems disconnect
+return processedUrlString;
+}
+}
+// Tab allocation manager engine blocks
+function spawnProxyTab(targetDestinationRawLink, dynamicTabDisplayTitle) {
+const structuralTabId = 'tab_node_' + Date.now();
+const finalProcessedProxyUrl = resolveProxiedUrlString(targetDestinationRawLink);
+// Build out clean title logs
+let titleLog = dynamicTabDisplayTitle || targetDestinationRawLink;
+if (titleLog.length > 18) titleLog = titleLog.substring(0, 15) + '...';
+// Generate structural components and inject straight down to execution spaces
+const wrapperFrameContainer = document.createElement('div');
+wrapperFrameContainer.id = 'viewport_frame_' + structuralTabId;
+wrapperFrameContainer.className = 'sandbox-iframe-viewport-container';
+wrapperFrameContainer.innerHTML = <iframe class="render-frame-node" id="iframe_element_${structuralTabId}" src="${finalProcessedProxyUrl}"></iframe>;
+document.getElementById('viewportWrapper').appendChild(wrapperFrameContainer);
+// Commit settings straight down memory index matrices
+globalTabCollection.push({
+id: structuralTabId,
+title: titleLog,
+url: finalProcessedProxyUrl
+});
+rebuildTabInterfaceRowBar();
+switchActiveTabContext(structuralTabId);
+}
+function rebuildTabInterfaceRowBar() {
+const containerNode = document.getElementById('activeTabsPoolContainer');
+containerNode.innerHTML = '';
+globalTabCollection.forEach(tab => {
+const tabElement = document.createElement('div');
+tabElement.className = proxy-tab-node ${tab.id === primaryActiveTabId ? 'active-tab' : ''};
+tabElement.setAttribute('onclick', switchActiveTabContext('${tab.id}'));
+tabElement.innerHTML = <span>${tab.title}</span> <span class="kill-tab-btn" onclick="terminateTabInstance(event, '${tab.id}')">×</span>;
+containerNode.appendChild(tabElement);
+});
+}
+function switchActiveTabContext(targetTabId) {
+primaryActiveTabId = targetTabId;
+// Hide Dashboard Front-page layers out cleanly
+document.getElementById('genesisDashboardScreen').style.display = 'none';
+// Reset standard viewing classes down across all target frames
+document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
+view.classList.remove('active-view');
+});
+// Make chosen focus asset tab visible onto viewport canvas
+const focalTargetFrame = document.getElementById('viewport_frame_' + targetTabId);
+if (focalTargetFrame) {
+focalTargetFrame.classList.add('active-view');
+}
+rebuildTabInterfaceRowBar();
+}
+function navigateToDashboardHome() {
+primaryActiveTabId = null;
+document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
+view.classList.remove('active-view');
+});
+document.getElementById('genesisDashboardScreen').style.display = 'flex';
+rebuildTabInterfaceRowBar();
+}
+function terminateTabInstance(eventObject, targetTabIdToKill) {
+eventObject.stopPropagation(); // Avoid triggering switch context loops on parent element clicks
+// Purge active DOM node structures directly from layout space
+const targetDomFrame = document.getElementById('viewport_frame_' + targetTabIdToKill);
+if (targetDomFrame) {
+// Wipe source clean first to safely terminate background game audio cycles instantly
+const insideIframe = document.getElementById(iframe_element_${targetTabIdToKill});
+if (insideIframe) insideIframe.src = 'about:blank';
+targetDomFrame.remove();
+}
+// Remove tracked item reference arrays out from index caches
+globalTabCollection = globalTabCollection.filter(tab => tab.id !== targetTabIdToKill);
+if (primaryActiveTabId === targetTabIdToKill) {
+if (globalTabCollection.length > 0) {
+switchActiveTabContext(globalTabCollection[globalTabCollection.length - 1].id);
+} else {
+navigateToDashboardHome();
+}
+} else {
+rebuildTabInterfaceRowBar();
+}
+}
+// Catch enter command triggers down across text field layers
+document.getElementById('proxySearchEngineMainField').addEventListener('keydown', function(e) {
+if (e.key === 'Enter' && this.value.trim()) {
+spawnProxyTab(this.value, this.value);
+this.value = ''; // Flush bar context space out immediately following execution
+}
+});
+// Dynamic Modals Framework Actions
+function openImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'flex'; }
+function closeImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'none'; }
+function commitSaveImportedNode() {
+const label = document.getElementById('wizardInputName').value.trim();
+const link = document.getElementById('wizardInputUrl').value.trim();
+let iconSymbol = document.getElementById('wizardInputIcon').value.trim() || '🎮';
+if (!label || !link) return alert('Deployment Failure: Required source properties are currently missing fields.');
+let activeCacheList = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
+activeCacheList.push({ label, link, iconSymbol });
+localStorage.setItem('genesis_premium_library', JSON.stringify(activeCacheList));
+renderImportedLibraryNodes();
+closeImportWizardModal();
+document.getElementById('wizardInputName').value = '';
+document.getElementById('wizardInputUrl').value = '';
+document.getElementById('wizardInputIcon').value = '';
+}
+function renderImportedLibraryNodes() {
+document.querySelectorAll('.runtime-loaded-custom-card').forEach(card => card.remove());
+const displayTargetGrid = document.getElementById('appsLibraryContainerNode');
+const insertBeforePlaceholderNode = document.querySelector('.import-trigger-node');
+const collectionCache = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
+collectionCache.forEach(nodeItem => {
+const nodeCardDiv = document.createElement('div');
+nodeCardDiv.className = "app-node-card runtime-loaded-custom-card";
+nodeCardDiv.onclick = function() { spawnProxyTab(nodeItem.link, nodeItem.label); };
+nodeCardDiv.innerHTML = <div class="icon-box-wrapper">${nodeItem.iconSymbol}</div> <div class="app-label-title">${nodeItem.label}</div>;
+displayTargetGrid.insertBefore(nodeCardDiv, insertBeforePlaceholderNode);
+});
+}modal-content-frame h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+.form-input-row { margin-bottom: 25px; }
+.form-input-row label { display: block; font-size: 0.9rem; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; }
+.form-element-field { width: 100%; padding: 12px 16px; background: #04040a; border: 1px solid #27273d; border-radius: 10px; color: #fff; outline: none; font-family: 'Rajdhani'; font-size: 1.1rem; }.form-element-field:focus { border-color: var(--neon-pink); }
+.modal-action-row { display: flex; gap: 15px; }
+.modal-click-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 900; text-transform: uppercase; }
+.btn-confirm-action { background: var(--neon-cyan); color: #000; }
+.btn-close-action { background: #1e1e33; color: #fff; }
+@keyframes identityPulse {
+0% { text-shadow: 0 0 10px var(--neon-cyan); }
+100% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 35px var(--neon-purple); }
+}
