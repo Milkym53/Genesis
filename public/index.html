@@ -1,124 +1,404 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>Ultraviolet | Sophisticated Web Proxy</title>
-		<meta
-			name="description"
-			content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#434c5e"
-		/>
-		<meta name="googlebot" content="index, follow, snippet" />
-		<link rel="shortcut icon" content="favicon.ico" />
-		<link rel="stylesheet" href="index.css" />
-		
 
-		<script src="baremux/index.js"></script>
-		<script src="uv/uv.bundle.js"></script>
-		<script src="uv/uv.config.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby Proxy | Genesis</title>
+    <style>
+        /* --- FONTS & RESET --- */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
-	</head>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: none; /* Hide default cursor */
+        }
 
-	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
-		</div>
+        body {
+            background-color: #050005;
+            color: #ff0040;
+            font-family: 'VT323', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://www.google.com/search?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
-		</footer>
-		<iframe style="display: none" id="uv-frame"></iframe>
-		<script src="register-sw.js"></script>
-		<script src="search.js"></script>
-		<script src="index.js"></script>
-	</body>
+        /* --- CUSTOM RUBY CURSOR --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            /* Ruby shape via CSS clip-path or SVG is better, but let's do a stylized diamond */
+            background: transparent;
+            transition: transform 0.1s ease-out;
+        }
+
+        #cursor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle, #ff0040 0%, #800020 100%);
+            transform: rotate(45deg) translate(-50%, -50%);
+            box-shadow: 
+                0 0 10px #ff0040,
+                0 0 20px #ff0040,
+                inset 0 0 5px rgba(255, 255, 255, 0.8);
+            border: 1px solid white;
+        }
+
+        /* Cursor Trail Effect */
+        .trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #ff0040;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%);
+            z-index: 9998;
+            animation: fadeOut 0.5s linear forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(0); }
+        }
+
+        /* --- BACKGROUND GRID (GENESIS STYLE) --- */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 64, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 64, 0.3) 1px, transparent 1px);
+            background-size: 40px 40px;
+            perspective: 500px;
+            transform-style: preserve-3d;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 400px; }
+        }
+
+        /* --- CRT OVERLAY EFFECTS --- */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, transparent 60%, #000 100%);
+            z-index: 101;
+            pointer-events: none;
+        }
+
+        /* --- MAIN UI CONTAINER --- */
+        .proxy-container {
+            position: relative;
+            z-index: 10;
+            width: 400px;
+            padding: 2rem;
+            background: rgba(10, 0, 10, 0.85);
+            border: 2px solid #ff0040;
+            box-shadow: 
+                0 0 20px #ff0040,
+                inset 0 0 20px rgba(255, 0, 64, 0.2);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        /* Animated Border */
+        .proxy-container::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #ff0040, #ff0040, transparent, #ff0040);
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+            letter-spacing: 4px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            letter-spacing: 2px;
+        }
+
+        /* --- INPUT FIELDS --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #ff0040;
+            text-shadow: 0 0 5px #ff0040;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #ff0040;
+            color: #fff;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(255, 0, 64, 0.2);
+        }
+
+        input:focus {
+            background: rgba(255, 0, 64, 0.1);
+            box-shadow: 0 0 15px #ff0040, inset 0 0 10px rgba(255, 0, 64, 0.5);
+            border-color: #fff;
+        }
+
+        /* --- BUTTON --- */
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid #ff0040;
+            color: #ff0040;
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #ff0040;
+        }
+
+        button:hover {
+            background: #ff0040;
+            color: #000;
+            box-shadow: 0 0 30px #ff0040;
+            font-weight: bold;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 0%,
+                rgba(255, 255, 255, 0.8) 50%,
+                transparent 100%
+            );
+            transform: rotate(45deg);
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        button:hover::after {
+            left: 100%;
+            opacity: 1;
+        }
+
+        /* --- GLITCH TEXT EFFECT --- */
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050005;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff0040;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #00ffff;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 30px, 0); }
+            20% { clip: rect(80px, 9999px, 100px, 0); }
+            40% { clip: rect(10px, 9999px, 50px, 0); }
+            60% { clip: rect(60px, 9999px, 80px, 0); }
+            80% { clip: rect(30px, 9999px, 60px, 0); }
+            100% { clip: rect(90px, 9999px, 100px, 0); }
+        }
+
+        /* --- DECORATIVE ELEMENTS --- */
+        .corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #ff0040;
+            box-shadow: 0 0 10px #ff0040;
+        }
+        .tl { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+        .tr { top: -5px; right: -5px; border-left: none; border-bottom: none; }
+        .bl { bottom: -5px; left: -5px; border-right: none; border-top: none; }
+        .br { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Grid -->
+    <div class="grid-bg"></div>
+
+    <!-- CRT Effects -->
+    <div class="scanlines"></div>
+    <div class="glow-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+
+    <!-- Main Proxy UI -->
+    <div class="proxy-container">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <h1 class="glitch" data-text="RUBY GENESIS">RUBY GENESIS</h1>
+        <div class="subtitle">SECURE PROXY ACCESS</div>
+
+        <form action="/connect" method="POST">
+            <div class="input-group">
+                <label for="url">TARGET URL</label>
+                <input type="text" id="url" name="url" placeholder="https://..." required autocomplete="off">
+            </div>
+
+            <button type="submit">CONNECT</button>
+        </form>
+    </div>
+
+    <script>
+        // --- CURSOR LOGIC ---
+        const cursor = document.getElementById('cursor');
+        const trailCount = 10;
+        const trails = [];
+
+        // Create trail elements
+        for (let i = 0; i < trailCount; i++) {
+            const trail = document.createElement('div');
+            trail.classList.add('trail');
+            document.body.appendChild(trail);
+            trails.push({ el: trail, x: 0, y: 0 });
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Move main cursor immediately
+            cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        });
+
+        // Animate trails with delay
+        function animateTrails() {
+            let x = mouseX;
+            let y = mouseY;
+
+            trails.forEach((trail, index) => {
+                const next = index === 0 ? { x: mouseX, y: mouseY } : trails[index - 1];
+                
+                // Smooth follow logic
+                trail.x += (next.x - trail.x) * 0.3;
+                trail.y += (next.y - trail.y) * 0.3;
+
+                trail.el.style.left = `${trail.x}px`;
+                trail.el.style.top = `${trail.y}px`;
+                
+                // Scale down the trail
+                const scale = 1 - (index / trailCount);
+                trail.el.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            });
+
+            requestAnimationFrame(animateTrails);
+        }
+
+        animateTrails();
+
+        // --- CLICK EFFECT ---
+        document.addEventListener('click', () => {
+            cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(0.8)`;
+            setTimeout(() => {
+                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(1)`;
+            }, 100);
+        });
+    </script>
+</body>
 </html>
