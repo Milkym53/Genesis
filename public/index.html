@@ -5,90 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis</title>
     <style>
-        :root { --red: #e50914; --bg: #141414; --card-w: 220px; }
+        :root { 
+            --neon-pink: #ff007f; 
+            --neon-blue: #00f0ff; 
+            --neon-purple: #9d00ff;
+            --bg: #0a0b10; 
+            --card-w: 240px; 
+        }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor: none !important; }
         body { background: var(--bg); color: #fff; overflow-x: hidden; min-height: 100vh; }
         
-        /* Moving Background Animation */
-        .bg-animate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background: radial-gradient(circle at 50% 50%, rgba(20,20,20,0.4), var(--bg)), url('https://transparenttextures.com'); background-size: cover; animation: shiftBg 25s infinite alternate linear; opacity: 0.65; }
-        @keyframes shiftBg { 0% { background-position: 0% 0%; filter: hue-rotate(0deg); } 100% { background-position: 100% 100%; filter: hue-rotate(15deg); } }
+        /* Vibrant Moving Cyber Background */
+        .bg-animate { 
+            position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; 
+            background: linear-gradient(125deg, #0d0116 0%, #030a1c 50%, #000000 100%);
+        }
+        .bg-glow {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,127,0.15) 0%, transparent 70%);
+            top: -200px; right: -200px; animation: floatGlow 15s infinite alternate ease-in-out;
+            pointer-events: none; z-index: -1;
+        }
+        .bg-glow-2 {
+            position: fixed; width: 500px; height: 500px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, transparent 70%);
+            bottom: -100px; left: -100px; animation: floatGlow 20s infinite alternate-reverse ease-in-out;
+            pointer-events: none; z-index: -1;
+        }
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-80px, 50px) scale(1.2); }
+        }
 
-        /* Custom Cursor */
-        #cursor { width: 12px; height: 12px; border: 2px solid #fff; background: var(--red); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; box-shadow: 0 0 10px var(--red); transition: width 0.1s, height 0.1s; }
+        /* Custom Neon Cursor */
+        #cursor { width: 10px; height: 10px; background: var(--neon-pink); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink); }
+        #cursor-blur { width: 30px; height: 30px; border: 2px solid var(--neon-blue); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9998; transition: transform 0.08s ease-out; box-shadow: 0 0 10px rgba(0,240,255,0.3); }
         
         /* Navbar */
-        nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 4%; position: fixed; width: 100%; z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%); }
-        .logo { font-size: 2rem; font-weight: 900; letter-spacing: -1px; color: var(--red); text-transform: uppercase; text-shadow: 0 0 15px rgba(229,9,20,0.4); }
-        .search { background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 7px 15px; border-radius: 4px; color: #fff; outline: none; }
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 25px 5%; position: fixed; width: 100%; z-index: 100; background: linear-gradient(to bottom, rgba(10,11,16,0.9) 0%, transparent 100%); backdrop-filter: blur(5px); }
+        .logo { font-size: 2.3rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,0,127,0.5)); }
+        .search-wrapper { display: flex; gap: 10px; }
+        .search { background: rgba(20,22,32,0.8); border: 2px solid #222538; padding: 10px 20px; border-radius: 30px; color: #fff; outline: none; width: 320px; transition: all 0.3s; font-size: 0.9rem; }
+        .search:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0,240,255,0.4); width: 400px; }
 
-        /* Billboard Hero Section */
-        .hero { height: 55vh; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; background: linear-gradient(to top, var(--bg) 0%, transparent 80%); margin-bottom: 20px; }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; }
-        .hero p { max-width: 500px; color: #aaa; margin-bottom: 20px; font-size: 0.95rem; }
-        .btn { background: #fff; color: #000; font-weight: bold; border: none; padding: 10px 24px; border-radius: 4px; font-size: 1rem; transition: 0.2s; }
-        .btn:hover { background: rgba(255,255,255,0.75); }
+        /* Billboard Hero Banner */
+        .hero { height: 60vh; display: flex; flex-direction: column; justify-content: center; padding: 0 5%; background: linear-gradient(to top, var(--bg) 0%, transparent 90%); position: relative; overflow: hidden; }
+        .hero-content { position: relative; z-index: 2; margin-top: 80px; }
+        .hero h1 { font-size: 4.5rem; font-weight: 900; margin-bottom: 10px; line-height: 1; text-shadow: 0 0 20px rgba(157,0,255,0.6); }
+        .hero p { max-width: 550px; color: #b4b9d0; margin-bottom: 25px; font-size: 1.05rem; line-height: 1.5; }
+        .btn { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); color: white; font-weight: bold; border: none; padding: 12px 30px; border-radius: 30px; font-size: 1rem; box-shadow: 0 0 15px rgba(255,0,127,0.4); transition: 0.3s; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,0,127,0.7); }
 
-        /* Movie / Game Rows */
-        .row { padding: 0 4% 30px 4%; }
-        .row h2 { font-size: 1.3rem; margin-bottom: 15px; color: #e5e5e5; }
-        .slider { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; }
-        .slider::-webkit-scrollbar { display: none; }
+        /* Netflix Content Rows & Headers */
+        .row { padding: 0 5% 40px 5%; position: relative; }
+        .row h2 { font-size: 1.5rem; margin-bottom: 18px; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
+        .row h2::before { content:''; display:inline-block; width:4px; height:20px; background: var(--neon-pink); border-radius: 2px; box-shadow: 0 0 8px var(--neon-pink); }
         
-        /* Netflix-style Scale Animation Cards */
-        .card { flex: 0 0 var(--card-w); height: 125px; background: #222; border-radius: 4px; overflow: hidden; position: relative; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s; }
-        .card:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid #444; }
-        .card-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: filter 0.3s; }
-        .card:hover .card-img { filter: brightness(0.6); }
-        .card-info { position: absolute; bottom: 0; padding: 10px; width: 100%; opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; font-weight: bold; }
+        /* Functional Scroll Shelves */
+        .slider-container { position: relative; display: flex; align-items: center; }
+        .slider { display: flex; gap: 18px; overflow-x: auto; padding: 15px 5px; scroll-behavior: smooth; width: 100%; }
+        .slider::-webkit-scrollbar { height: 6px; }
+        .slider::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        .slider::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .slider::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
+        
+        /* Premium Scale Hover Game Cards */
+        .card { flex: 0 0 var(--card-w); height: 145px; background: #121420; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid #1e2238; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s, box-shadow 0.4s; text-decoration: none; color: inherit; }
+        .card:hover { transform: scale(1.18); z-index: 10; box-shadow: 0 15px 30px rgba(0,240,255,0.25); border-color: var(--neon-blue); }
+        .card-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.4s; }
+        .card:hover .card-img { transform: scale(1.05); filter: brightness(0.5); }
+        .card-info { position: absolute; bottom: 0; padding: 15px; width: 100%; opacity: 0; background: linear-gradient(to top, rgba(10,11,16,1) 0%, transparent 100%); transition: opacity 0.3s; font-size: 0.85rem; font-weight: bold; }
         .card:hover .card-info { opacity: 1; }
+        .card-tag { font-size: 0.7rem; color: var(--neon-blue); text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; }
+
+        /* Left/Right Shelf Navigation Buttons */
+        .scroll-btn { position: absolute; background: rgba(10,11,16,0.85); border: 1px solid #222538; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; top: 50%; transform: translateY(-50%); z-index: 20; transition: 0.2s; visibility: hidden; }
+        .slider-container:hover .scroll-btn { visibility: visible; }
+        .scroll-btn:hover { background: white; color: black; border-color: white; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        .scroll-left { left: -20px; }
+        .scroll-right { right: -20px; }
     </style>
 </head>
 <body>
 
     <div class="bg-animate"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
     <div id="cursor"></div>
+    <div id="cursor-blur"></div>
 
+    <!-- Header Navigation -->
     <nav>
         <div class="logo">Genesis</div>
-        <input type="text" class="search" placeholder="Titles, genres, proxies...">
+        <div class="search-wrapper">
+            <input type="text" class="search" placeholder="Type a URL or search DuckDuckGo securely...">
+        </div>
     </nav>
 
+    <!-- Main Billboard Hero Area -->
     <div class="hero">
-        <h1>Genesis OS</h1>
-        <p>Unlimited unblocked content, custom web engines, and streaming web clones running live on cloud servers.</p>
-        <div><button class="btn" onclick="alert('Launching proxy terminal...')">▶ Launch Terminal</button></div>
-    </div>
-
-    <div class="row">
-        <h2>Popular on Genesis</h2>
-        <div class="slider">
-            <a href="games/minecraft/" class="card">
-                <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                <div class="card-info">Eaglercraft 1.8.8</div>
-            </a>
-            <a href="games/slope/" class="card">
-                <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                <div class="card-info">Slope Client</div>
-            </a>
-            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Retro Hub</div></div>
-            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Ultraviolet Engine</div></div>
-            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Settings</div></div>
+        <div class="hero-content">
+            <h1>GENESIS NETWORK</h1>
+            <p>Stream fully unblocked titles and encrypted applications hidden behind advanced backend cloud loops.</p>
+            <div><button class="btn" id="hero-launch">▶ Open Web Engine</button></div>
         </div>
     </div>
 
-    <script>
-        // Custom Cursor Logic
-        const cursor = document.getElementById('cursor');
-        window.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        
-        // Cursor Shrink/Expand effects on active clickable tags
-        document.querySelectorAll('a, button, .card, input').forEach(elem => {
-            elem.addEventListener('mouseenter', () => { cursor.style.width = '24px'; cursor.style.height = '24px'; cursor.style.background = 'transparent'; });
-            elem.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.background = 'var(--red)'; });
-        });
-    </script>
-</body>
-</html>
+    <!-- SECTION 1: Games List -->
+    <div class="row">
+        <h2>Premium Core Games</h2>
+        <div class="slider-container">
+            <button class="scroll-btn scroll-left" onclick="slide(this, -1)">‹</button>
+            <div class="slider">
+                <a href="games/minecraft/" class="card">
+                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="card-info"><div>Eaglercraft 1.8.8</div><div class="card-tag">Sandbox</div></div>
+                </a>
+                <a href="games/slope/" class="card">
+                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="card-info"><div>Slope Client</div><div class="card-tag">Arcade</div></div>
+                </a>
+                <a href="games/retro/" class="card">
+                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="card-info"><div>Retro Emulator</div><div class="card-tag">Console</div></div>
+                </a>
+            </div>
+            <button class="scroll-btn scroll-right" onclick="slide(this, 1)">›</button>
+        </div>
+    </div>
+
+    <!-- SECTION 2: Extra Core Apps -->
+    <div class="row">
+        <h2>Encrypted Frameworks</h2>
+        <div class="slider-container">
+            <button class="scroll-btn scroll-left" onclick="slide(this, -1)">‹</button>
+            <div class="slider">
+                <div class="card" onclick="launchProxy('https://duckduckgo.com')">
+                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="card-info"><div>DuckDuckGo Browser</div><div class="card-tag">Search Engine</div></div>
+                </div>
+                <div class="card">
+                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
