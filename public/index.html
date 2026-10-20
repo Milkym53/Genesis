@@ -3,156 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis</title>
+    <title>Genesis // Core Network</title>
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Orbitron:wght@500;800;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: none !important; /* Forces custom cursor usage */
         }
 
         body {
-            background: radial-gradient(circle at center, #1a1528 0%, #0d0b14 100%);
+            background-color: #030206;
             color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-        }
-
-        .container {
-            text-align: center;
-            width: 100%;
-            max-width: 540px;
-            padding: 20px;
-            z-index: 2;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ff007f, #7f00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 0px 30px rgba(127, 0, 255, 0.3);
-        }
-
-        p {
-            color: #9d9aa7;
-            font-size: 1rem;
-            margin-bottom: 35px;
-        }
-
-        form {
-            width: 100%;
             position: relative;
         }
 
-        input {
-            width: 100%;
-            padding: 18px 24px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        input:focus {
-            border-color: #7f00ff;
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 20px rgba(127, 0, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        input::placeholder {
-            color: #625f6e;
-        }
-
-        .glow {
+        /* Interactive Cyber Matrix Background Canvas */
+        #bg-canvas {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: #7f00ff;
-            filter: blur(150px);
-            opacity: 0.15;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 1000x Cooler Custom Neon Ring Cursor */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00f0ff;
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 0 15px #00f0ff, inset 0 0 10px #00f0ff;
+        }
+
+        #custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #ff007f;
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 10px #ff007f;
+        }
+
+        /* Core Panel Shell (Glassmorphic Cyber-Deck) */
+        .cyber-deck {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 680px;
+            padding: 35px;
+            background: rgba(10, 8, 20, 0.65);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.05), inset 0 0 30px rgba(255, 0, 127, 0.02);
+            text-align: center;
+        }
+
+        /* TungTung Active Subsystem Header */
+        .node-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 0, 127, 0.07);
+            border: 1px solid rgba(255, 0, 127, 0.25);
+            color: #ff007f;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.1);
+        }
+
+        .node-status .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #ff007f;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff007f;
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #00f0ff, #ff007f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.2));
+        }
+
+        /* Micro Tab Architecture */
+        .cyber-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            color: #5d5a6f;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 10px 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-link.active, .nav-link:hover {
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00f0ff;
+            box-shadow: 0 0 10px #00f0ff;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* View Panels */
+        .sub-panel {
+            display: none;
+            animation: pane-fade 0.4s ease forwards;
+        }
+
+        .sub-panel.active {
+            display: block;
+        }
+
+        /* Hyper-Speed Input Framework */
+        .input-chamber {
+            position: relative;
+            background: #090710;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        .input-chamber:focus-within {
+            border-color: #00f0ff;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        .input-chamber input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 14px 20px;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .input-chamber input::placeholder {
+            color: #3b384a;
+        }
+
+        .fire-btn {
+            background: linear-gradient(135deg, #00f0ff, #7f00ff);
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            border: none;
+            outline: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .fire-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+        }
+
+        /* High-Definition Responsive Game Array */
+        .app-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            max-height: 290px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .app-matrix-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .app-matrix-grid::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .app-node-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 22px 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #a4a1b5;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .app-node-card:hover {
+            background: rgba(0, 240, 255, 0.05);
+            border-color: #00f0ff;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.1);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes pane-fade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 540px) {
+            .app-matrix-grid { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 2.6rem; }
         }
     </style>
-    
-    <!-- CORE SCRIPTS REQUIRED BY THE CONTAINER DEPLOYMENT -->
+
+    <!-- MANDATORY INJECTION ENGINE CODE MODULES -->
     <script src="uv/uv.bundle.js" defer></script>
     <script src="uv/uv.config.js" defer></script>
 </head>
 <body>
 
-    <div class="glow"></div>
+    <!-- Dynamic System Grid Vector Core -->
+    <canvas id="bg-canvas"></canvas>
 
-    <div class="container">
-        <h1>GENESIS</h1>
-        <p>Enter a URL or search query to browse freely.</p>
+    <!-- Custom Cursor Nodes -->
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-dot"></div>
+
+    <div class="cyber-deck">
+        <div class="node-status">
+            <div class="live-indicator"></div> GENESIS NODE ONLINE
+        </div>
         
-        <form id="uv-form">
-            <!-- DuckDuckGo Query Template Injection Link -->
-            <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
-            <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL..." autocomplete="off">
-        </form>
-    </div>
+        <h1>GENESIS</h1>
 
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('uv-form');
-            const address = document.getElementById('uv-address');
-            const searchEngine = document.getElementById('uv-search-engine');
+        <!-- Navigation Array Elements -->
+        <div class="cyber-navigation">
+            <button class="nav-link active" onclick="navigateSubsystem('proxy-chamber', this)">PROXY HUB</button>
+            <button class="nav-link" onclick="navigateSubsystem('matrix-apps', this)">GAMES & MATRIX</button>
+        </div>
 
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                let url = address.value.trim();
-                
-                // Formats search into DuckDuckGo natively inside the sandbox context
-                if (!isUrl(url)) {
-                    url = searchEngine.value.replace('%s', encodeURIComponent(url));
-                } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
-                    url = 'https://' + url;
-                }
-
-                if ('serviceWorker' in navigator) {
-                    try {
-                        // Dynamically links into the ultraviolet setup config values
-                        await navigator.serviceWorker.register('uv/uv.sw.js', {
-                            scope: __uv$config.prefix
-                        });
-                        
-                        // Forces page transition inside the same active browser window
-                        window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
-                    } catch (err) {
-                        alert('Could not start proxy session. Check your Railway runtime logs.');
-                        console.error(err);
-                    }
-                } else {
-                    alert('Service workers are disabled or unsupported by your web browser.');
-                }
-            });
-
-            function isUrl(val = '') {
-                if (/^http(s?):\/\//.test(val)) return true;
-                const reg = /^(([a-zA-Z0-9#_$-]+)\.)+([a-zA-Z]{2,63})/;
-                return reg.test(val);
-            }
-        });
-    </script>
-</body>
-</html>
+        <!-- Tab Panel Alpha: DuckDuckGo Secure Search Routing Core -->
+        <div id="proxy-chamber" class="sub-panel active">
+            <form id="secure-proxy-form">
+                <div class="input-chamber">
+                    <input id="hidden-search-engine" value="https://duckduckgo.com" type="hidden" />
+                    <input id="user-destination-input" type="text" placeholder="Trace link grid or execute web search query..." autocomplete="off">
+                    <button type="submit" class="fire-btn">EXECUTE</button>
