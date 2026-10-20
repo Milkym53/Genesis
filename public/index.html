@@ -3,577 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis Network Terminal</title>
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Mandatory structural linking paths matching production Bare/Wisp/UV standards -->
-    <script src="uv/uv.config.js" defer></script>
-    
+    <title>Genesis</title>
     <style>
-        :root {
-            --bg-dark: #06060c;
-            --panel-bg: rgba(15, 15, 30, 0.7);
-            --neon-pink: #ff0055;
-            --neon-cyan: #00f3ff;
-            --neon-purple: #8200ff;
-            --text-main: #ffffff;
-            --text-muted: #6b6b85;
-            --accent-glow: rgba(0, 243, 255, 0.25);
-        }
+        :root { --red: #e50914; --bg: #141414; --card-w: 220px; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor: none !important; }
+        body { background: var(--bg); color: #fff; overflow-x: hidden; min-height: 100vh; }
+        
+        /* Moving Background Animation */
+        .bg-animate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background: radial-gradient(circle at 50% 50%, rgba(20,20,20,0.4), var(--bg)), url('https://transparenttextures.com'); background-size: cover; animation: shiftBg 25s infinite alternate linear; opacity: 0.65; }
+        @keyframes shiftBg { 0% { background-position: 0% 0%; filter: hue-rotate(0deg); } 100% { background-position: 100% 100%; filter: hue-rotate(15deg); } }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* Custom Cursor */
+        #cursor { width: 12px; height: 12px; border: 2px solid #fff; background: var(--red); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; box-shadow: 0 0 10px var(--red); transition: width 0.1s, height 0.1s; }
+        
+        /* Navbar */
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 4%; position: fixed; width: 100%; z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%); }
+        .logo { font-size: 2rem; font-weight: 900; letter-spacing: -1px; color: var(--red); text-transform: uppercase; text-shadow: 0 0 15px rgba(229,9,20,0.4); }
+        .search { background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 7px 15px; border-radius: 4px; color: #fff; outline: none; }
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 10%, rgba(130, 0, 255, 0.2) 0%, transparent 60%),
-                radial-gradient(circle at 90% 90%, rgba(255, 0, 85, 0.08) 0%, transparent 40%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        /* Billboard Hero Section */
+        .hero { height: 55vh; display: flex; flex-direction: column; justify-content: center; padding: 0 4%; background: linear-gradient(to top, var(--bg) 0%, transparent 80%); margin-bottom: 20px; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; }
+        .hero p { max-width: 500px; color: #aaa; margin-bottom: 20px; font-size: 0.95rem; }
+        .btn { background: #fff; color: #000; font-weight: bold; border: none; padding: 10px 24px; border-radius: 4px; font-size: 1rem; transition: 0.2s; }
+        .btn:hover { background: rgba(255,255,255,0.75); }
 
-        /* Fancy Cyber Scanline FX */
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
-            z-index: 99999;
-            opacity: 0.3;
-            pointer-events: none;
-            background-size: 100% 4px, 4px 100%;
-        }
+        /* Movie / Game Rows */
+        .row { padding: 0 4% 30px 4%; }
+        .row h2 { font-size: 1.3rem; margin-bottom: 15px; color: #e5e5e5; }
+        .slider { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; scroll-behavior: smooth; }
+        .slider::-webkit-scrollbar { display: none; }
+        
+        /* Netflix-style Scale Animation Cards */
+        .card { flex: 0 0 var(--card-w); height: 125px; background: #222; border-radius: 4px; overflow: hidden; position: relative; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s; }
+        .card:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid #444; }
+        .card-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: filter 0.3s; }
+        .card:hover .card-img { filter: brightness(0.6); }
+        .card-info { position: absolute; bottom: 0; padding: 10px; width: 100%; opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; font-weight: bold; }
+        .card:hover .card-info { opacity: 1; }
+    </style>
+</head>
+<body>
 
-        /* App Wrapper Layout Matrix */
-        #viewportWrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100vh;
-            position: relative;
-        }
+    <div class="bg-animate"></div>
+    <div id="cursor"></div>
 
-        /* Dynamic Nav Control Topbar similar to premium portal hubs */
-        .system-topbar {
-            background: #090912;
-            border-bottom: 2px solid var(--neon-purple);
-            padding: 10px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-        }
+    <nav>
+        <div class="logo">Genesis</div>
+        <input type="text" class="search" placeholder="Titles, genres, proxies...">
+    </nav>
 
-        .system-brand {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: 3px;
-            background: linear-gradient(45deg, #fff, var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
-            cursor: pointer;
-        }
+    <div class="hero">
+        <h1>Genesis OS</h1>
+        <p>Unlimited unblocked content, custom web engines, and streaming web clones running live on cloud servers.</p>
+        <div><button class="btn" onclick="alert('Launching proxy terminal...')">▶ Launch Terminal</button></div>
+    </div>
 
-        .tab-controller-pool {
-            display: flex;
-            gap: 8px;
-            max-width: 50%;
-            overflow-x: auto;
-        }
+    <div class="row">
+        <h2>Popular on Genesis</h2>
+        <div class="slider">
+            <a href="games/minecraft/" class="card">
+                <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                <div class="card-info">Eaglercraft 1.8.8</div>
+            </a>
+            <a href="games/slope/" class="card">
+                <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+                <div class="card-info">Slope Client</div>
+            </a>
+            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Retro Hub</div></div>
+            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Ultraviolet Engine</div></div>
+            <div class="card"><div class="card-img" style="background-image: url('https://unsplash.com');"></div><div class="card-info">Settings</div></div>
+        </div>
+    </div>
 
-        .proxy-tab-node {
-            background: #121224;
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 6px 16px;
-            border-radius: 6px 6px 0 0;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .proxy-tab-node.active-tab {
-            background: var(--panel-bg);
-            border-color: var(--neon-cyan);
-            color: #fff;
-            box-shadow: 0 0 10px rgba(0,243,255,0.15);
-        }
-
-        .kill-tab-btn {
-            color: var(--neon-pink);
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Primary Menu Dashboard Container Layer */
-        .portal-home-screen {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            overflow-y: auto;
-            position: absolute;
-            top: 55px; left: 0; right: 0; bottom: 0;
-            z-index: 10;
-            background: var(--bg-dark);
-        }
-
-        .main-brand-banner {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .main-brand-banner h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4.8rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 14px;
-            color: #fff;
-            text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-purple);
-            animation: identityPulse 4s infinite alternate;
-        }
-
-        /* Upgraded Search Input Bar with embedded Engine Processing */
-        .search-container-box {
-            width: 100%;
-            max-width: 720px;
-            position: relative;
-            margin-bottom: 50px;
-        }
-
-        .search-bar-element {
-            width: 100%;
-            padding: 20px 30px;
-            padding-left: 70px;
-            background: rgba(14, 14, 28, 0.9);
-            border: 2px solid var(--neon-purple);
-            border-radius: 50px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.3rem;
-            color: #fff;
-            outline: none;
-            box-shadow: 0 0 25px rgba(130, 0, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .search-bar-element:focus {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 40px rgba(255, 0, 85, 0.4), inset 0 0 15px rgba(255, 0, 85, 0.1);
-        }
-
-        .search-engine-icon {
-            position: absolute;
-            left: 26px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            filter: drop-shadow(0 0 6px var(--neon-cyan));
-        }
-
-        /* System Game Library Grids UI Layout */
-        .library-section-frame {
-            width: 100%;
-            max-width: 850px;
-        }
-
-        .library-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            color: var(--neon-cyan);
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-left: 4px solid var(--neon-pink);
-            padding-left: 12px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
-        }
-
-        .apps-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(115px, 115px));
-            gap: 26px;
-            justify-content: center;
-            background: rgba(11, 11, 22, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 35px;
-            border-radius: 24px;
-            backdrop-filter: blur(20px);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .app-node-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25);
-        }
-
-        .app-node-card:hover { transform: translateY(-8px); }
-
-        .icon-box-wrapper {
-            width: 80px;
-            height: 80px;
-            background: #111122;
-            border: 2px solid #22223b;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.3rem;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
-
-        /* Cyber Color Grid Distributions */
-        .app-node-card:nth-child(4n+1) .icon-box-wrapper { border-color: var(--neon-pink); }
-        .app-node-card:nth-child(4n+2) .icon-box-wrapper { border-color: var(--neon-cyan); }
-        .app-node-card:nth-child(4n+3) .icon-box-wrapper { border-color: var(--neon-purple); }
-        .app-node-card:nth-child(4n+4) .icon-box-wrapper { border-color: #ffaa00; }
-        .app-node-card:hover .icon-box-wrapper { box-shadow: 0 0 25px currentColor; border-color: #fff; }
-
-        .app-label-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-            color: #cccce0;
-            text-transform: uppercase;
-        }
-
-        .app-node-card:hover .app-label-title { color: #fff; }
-
-        .import-trigger-node .icon-box-wrapper { border: 2px dashed var(--text-muted); background: transparent; color: var(--text-muted); }
-        .import-trigger-node:hover .icon-box-wrapper { border-color: var(--neon-cyan); color: var(--neon-cyan); }
-
-        /* Multi-Tab Render Sandbox Viewport Panel Layers */
-        .sandbox-iframe-viewport-container {
-            display: none;
-            width: 100%;
-            flex-grow: 1;
-            position: absolute;
-            top: 55px; left: 0; bottom: 0; right: 0;
-            z-index: 5;
-            background: #000;
-        }
-
-        .sandbox-iframe-viewport-container.active-view { display: block; }
-        .render-frame-node { width: 100%; height: 100%; border: none; background: #fff; }
-
-        /* Dynamic Popups Modals Config configurations */
-        .modal-mask-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-// Tab system track states memory allocations
-let globalTabCollection = [];
-let primaryActiveTabId = null;
-window.onload = function() {
-renderImportedLibraryNodes();
-};
-// Core Proxy URL resolution mapping function matching Ultraviolet syntax requirements
-function resolveProxiedUrlString(inputQueryString) {
-let processedUrlString = inputQueryString.trim();
-// DuckDuckGo routing fallback validation check loops
-if (!processedUrlString.includes('.') || processedUrlString.includes(' ')) {
-// Generates a clean, fully functional server-compliant search string parsed explicitly via standard search query logic
-processedUrlString = 'duckduckgo.com' + encodeURIComponent(processedUrlString);
-} else if (!processedUrlString.startsWith('http://') && !processedUrlString.startsWith('https://')) {
-processedUrlString = 'https://' + processedUrlString;
-}
-// Checks verification layers for client engine variables matching local ultraviolet bundles
-if (typeof __uv$config !== 'undefined') {
-return __uv$config.prefix + __uv$config.encodeUrl(processedUrlString);
-} else {
-// Fallback default routing scenario loop maps natively if background worker systems disconnect
-return processedUrlString;
-}
-}
-// Tab allocation manager engine blocks
-function spawnProxyTab(targetDestinationRawLink, dynamicTabDisplayTitle) {
-const structuralTabId = 'tab_node_' + Date.now();
-const finalProcessedProxyUrl = resolveProxiedUrlString(targetDestinationRawLink);
-// Build out clean title logs
-let titleLog = dynamicTabDisplayTitle || targetDestinationRawLink;
-if (titleLog.length > 18) titleLog = titleLog.substring(0, 15) + '...';
-// Generate structural components and inject straight down to execution spaces
-const wrapperFrameContainer = document.createElement('div');
-wrapperFrameContainer.id = 'viewport_frame_' + structuralTabId;
-wrapperFrameContainer.className = 'sandbox-iframe-viewport-container';
-wrapperFrameContainer.innerHTML = <iframe class="render-frame-node" id="iframe_element_${structuralTabId}" src="${finalProcessedProxyUrl}"></iframe>;
-document.getElementById('viewportWrapper').appendChild(wrapperFrameContainer);
-// Commit settings straight down memory index matrices
-globalTabCollection.push({
-id: structuralTabId,
-title: titleLog,
-url: finalProcessedProxyUrl
-});
-rebuildTabInterfaceRowBar();
-switchActiveTabContext(structuralTabId);
-}
-function rebuildTabInterfaceRowBar() {
-const containerNode = document.getElementById('activeTabsPoolContainer');
-containerNode.innerHTML = '';
-globalTabCollection.forEach(tab => {
-const tabElement = document.createElement('div');
-tabElement.className = proxy-tab-node ${tab.id === primaryActiveTabId ? 'active-tab' : ''};
-tabElement.setAttribute('onclick', switchActiveTabContext('${tab.id}'));
-tabElement.innerHTML = <span>${tab.title}</span> <span class="kill-tab-btn" onclick="terminateTabInstance(event, '${tab.id}')">×</span>;
-containerNode.appendChild(tabElement);
-});
-}
-function switchActiveTabContext(targetTabId) {
-primaryActiveTabId = targetTabId;
-// Hide Dashboard Front-page layers out cleanly
-document.getElementById('genesisDashboardScreen').style.display = 'none';
-// Reset standard viewing classes down across all target frames
-document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
-view.classList.remove('active-view');
-});
-// Make chosen focus asset tab visible onto viewport canvas
-const focalTargetFrame = document.getElementById('viewport_frame_' + targetTabId);
-if (focalTargetFrame) {
-focalTargetFrame.classList.add('active-view');
-}
-rebuildTabInterfaceRowBar();
-}
-function navigateToDashboardHome() {
-primaryActiveTabId = null;
-document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
-view.classList.remove('active-view');
-});
-document.getElementById('genesisDashboardScreen').style.display = 'flex';
-rebuildTabInterfaceRowBar();
-}
-function terminateTabInstance(eventObject, targetTabIdToKill) {
-eventObject.stopPropagation(); // Avoid triggering switch context loops on parent element clicks
-// Purge active DOM node structures directly from layout space
-const targetDomFrame = document.getElementById('viewport_frame_' + targetTabIdToKill);
-if (targetDomFrame) {
-// Wipe source clean first to safely terminate background game audio cycles instantly
-const insideIframe = document.getElementById(iframe_element_${targetTabIdToKill});
-if (insideIframe) insideIframe.src = 'about:blank';
-targetDomFrame.remove();
-}
-// Remove tracked item reference arrays out from index caches
-globalTabCollection = globalTabCollection.filter(tab => tab.id !== targetTabIdToKill);
-if (primaryActiveTabId === targetTabIdToKill) {
-if (globalTabCollection.length > 0) {
-switchActiveTabContext(globalTabCollection[globalTabCollection.length - 1].id);
-} else {
-navigateToDashboardHome();
-}
-} else {
-rebuildTabInterfaceRowBar();
-}
-}
-// Catch enter command triggers down across text field layers
-document.getElementById('proxySearchEngineMainField').addEventListener('keydown', function(e) {
-if (e.key === 'Enter' && this.value.trim()) {
-spawnProxyTab(this.value, this.value);
-this.value = ''; // Flush bar context space out immediately following execution
-}
-});
-// Dynamic Modals Framework Actions
-function openImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'flex'; }
-function closeImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'none'; }
-function commitSaveImportedNode() {
-const label = document.getElementById('wizardInputName').value.trim();
-const link = document.getElementById('wizardInputUrl').value.trim();
-let iconSymbol = document.getElementById('wizardInputIcon').value.trim() || '🎮';
-if (!label || !link) return alert('Deployment Failure: Required source properties are currently missing fields.');
-let activeCacheList = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
-activeCacheList.push({ label, link, iconSymbol });
-localStorage.setItem('genesis_premium_library', JSON.stringify(activeCacheList));
-renderImportedLibraryNodes();
-closeImportWizardModal();
-document.getElementById('wizardInputName').value = '';
-document.getElementById('wizardInputUrl').value = '';
-document.getElementById('wizardInputIcon').value = '';
-}
-function renderImportedLibraryNodes() {
-document.querySelectorAll('.runtime-loaded-custom-card').forEach(card => card.remove());
-const displayTargetGrid = document.getElementById('appsLibraryContainerNode');
-const insertBeforePlaceholderNode = document.querySelector('.import-trigger-node');
-const collectionCache = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
-collectionCache.forEach(nodeItem => {
-const nodeCardDiv = document.createElement('div');
-nodeCardDiv.className = "app-node-card runtime-loaded-custom-card";
-nodeCardDiv.onclick = function() { spawnProxyTab(nodeItem.link, nodeItem.label); };
-nodeCardDiv.innerHTML = <div class="icon-box-wrapper">${nodeItem.iconSymbol}</div> <div class="app-label-title">${nodeItem.label}</div>;
-displayTargetGrid.insertBefore(nodeCardDiv, insertBeforePlaceholderNode);
-});
-}// Tab system track states memory allocations
-let globalTabCollection = [];
-let primaryActiveTabId = null;
-window.onload = function() {
-renderImportedLibraryNodes();
-};
-// Core Proxy URL resolution mapping function matching Ultraviolet syntax requirements
-function resolveProxiedUrlString(inputQueryString) {
-let processedUrlString = inputQueryString.trim();
-// DuckDuckGo routing fallback validation check loops
-if (!processedUrlString.includes('.') || processedUrlString.includes(' ')) {
-// Generates a clean, fully functional server-compliant search string parsed explicitly via standard search query logic
-processedUrlString = 'duckduckgo.com' + encodeURIComponent(processedUrlString);
-} else if (!processedUrlString.startsWith('http://') && !processedUrlString.startsWith('https://')) {
-processedUrlString = 'https://' + processedUrlString;
-}
-// Checks verification layers for client engine variables matching local ultraviolet bundles
-if (typeof __uv$config !== 'undefined') {
-return __uv$config.prefix + __uv$config.encodeUrl(processedUrlString);
-} else {
-// Fallback default routing scenario loop maps natively if background worker systems disconnect
-return processedUrlString;
-}
-}
-// Tab allocation manager engine blocks
-function spawnProxyTab(targetDestinationRawLink, dynamicTabDisplayTitle) {
-const structuralTabId = 'tab_node_' + Date.now();
-const finalProcessedProxyUrl = resolveProxiedUrlString(targetDestinationRawLink);
-// Build out clean title logs
-let titleLog = dynamicTabDisplayTitle || targetDestinationRawLink;
-if (titleLog.length > 18) titleLog = titleLog.substring(0, 15) + '...';
-// Generate structural components and inject straight down to execution spaces
-const wrapperFrameContainer = document.createElement('div');
-wrapperFrameContainer.id = 'viewport_frame_' + structuralTabId;
-wrapperFrameContainer.className = 'sandbox-iframe-viewport-container';
-wrapperFrameContainer.innerHTML = <iframe class="render-frame-node" id="iframe_element_${structuralTabId}" src="${finalProcessedProxyUrl}"></iframe>;
-document.getElementById('viewportWrapper').appendChild(wrapperFrameContainer);
-// Commit settings straight down memory index matrices
-globalTabCollection.push({
-id: structuralTabId,
-title: titleLog,
-url: finalProcessedProxyUrl
-});
-rebuildTabInterfaceRowBar();
-switchActiveTabContext(structuralTabId);
-}
-function rebuildTabInterfaceRowBar() {
-const containerNode = document.getElementById('activeTabsPoolContainer');
-containerNode.innerHTML = '';
-globalTabCollection.forEach(tab => {
-const tabElement = document.createElement('div');
-tabElement.className = proxy-tab-node ${tab.id === primaryActiveTabId ? 'active-tab' : ''};
-tabElement.setAttribute('onclick', switchActiveTabContext('${tab.id}'));
-tabElement.innerHTML = <span>${tab.title}</span> <span class="kill-tab-btn" onclick="terminateTabInstance(event, '${tab.id}')">×</span>;
-containerNode.appendChild(tabElement);
-});
-}
-function switchActiveTabContext(targetTabId) {
-primaryActiveTabId = targetTabId;
-// Hide Dashboard Front-page layers out cleanly
-document.getElementById('genesisDashboardScreen').style.display = 'none';
-// Reset standard viewing classes down across all target frames
-document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
-view.classList.remove('active-view');
-});
-// Make chosen focus asset tab visible onto viewport canvas
-const focalTargetFrame = document.getElementById('viewport_frame_' + targetTabId);
-if (focalTargetFrame) {
-focalTargetFrame.classList.add('active-view');
-}
-rebuildTabInterfaceRowBar();
-}
-function navigateToDashboardHome() {
-primaryActiveTabId = null;
-document.querySelectorAll('.sandbox-iframe-viewport-container').forEach(view => {
-view.classList.remove('active-view');
-});
-document.getElementById('genesisDashboardScreen').style.display = 'flex';
-rebuildTabInterfaceRowBar();
-}
-function terminateTabInstance(eventObject, targetTabIdToKill) {
-eventObject.stopPropagation(); // Avoid triggering switch context loops on parent element clicks
-// Purge active DOM node structures directly from layout space
-const targetDomFrame = document.getElementById('viewport_frame_' + targetTabIdToKill);
-if (targetDomFrame) {
-// Wipe source clean first to safely terminate background game audio cycles instantly
-const insideIframe = document.getElementById(iframe_element_${targetTabIdToKill});
-if (insideIframe) insideIframe.src = 'about:blank';
-targetDomFrame.remove();
-}
-// Remove tracked item reference arrays out from index caches
-globalTabCollection = globalTabCollection.filter(tab => tab.id !== targetTabIdToKill);
-if (primaryActiveTabId === targetTabIdToKill) {
-if (globalTabCollection.length > 0) {
-switchActiveTabContext(globalTabCollection[globalTabCollection.length - 1].id);
-} else {
-navigateToDashboardHome();
-}
-} else {
-rebuildTabInterfaceRowBar();
-}
-}
-// Catch enter command triggers down across text field layers
-document.getElementById('proxySearchEngineMainField').addEventListener('keydown', function(e) {
-if (e.key === 'Enter' && this.value.trim()) {
-spawnProxyTab(this.value, this.value);
-this.value = ''; // Flush bar context space out immediately following execution
-}
-});
-// Dynamic Modals Framework Actions
-function openImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'flex'; }
-function closeImportWizardModal() { document.getElementById('customImportWizardModal').style.display = 'none'; }
-function commitSaveImportedNode() {
-const label = document.getElementById('wizardInputName').value.trim();
-const link = document.getElementById('wizardInputUrl').value.trim();
-let iconSymbol = document.getElementById('wizardInputIcon').value.trim() || '🎮';
-if (!label || !link) return alert('Deployment Failure: Required source properties are currently missing fields.');
-let activeCacheList = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
-activeCacheList.push({ label, link, iconSymbol });
-localStorage.setItem('genesis_premium_library', JSON.stringify(activeCacheList));
-renderImportedLibraryNodes();
-closeImportWizardModal();
-document.getElementById('wizardInputName').value = '';
-document.getElementById('wizardInputUrl').value = '';
-document.getElementById('wizardInputIcon').value = '';
-}
-function renderImportedLibraryNodes() {
-document.querySelectorAll('.runtime-loaded-custom-card').forEach(card => card.remove());
-const displayTargetGrid = document.getElementById('appsLibraryContainerNode');
-const insertBeforePlaceholderNode = document.querySelector('.import-trigger-node');
-const collectionCache = JSON.parse(localStorage.getItem('genesis_premium_library')) || [];
-collectionCache.forEach(nodeItem => {
-const nodeCardDiv = document.createElement('div');
-nodeCardDiv.className = "app-node-card runtime-loaded-custom-card";
-nodeCardDiv.onclick = function() { spawnProxyTab(nodeItem.link, nodeItem.label); };
-nodeCardDiv.innerHTML = <div class="icon-box-wrapper">${nodeItem.iconSymbol}</div> <div class="app-label-title">${nodeItem.label}</div>;
-displayTargetGrid.insertBefore(nodeCardDiv, insertBeforePlaceholderNode);
-});
-}modal-content-frame h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
-.form-input-row { margin-bottom: 25px; }
-.form-input-row label { display: block; font-size: 0.9rem; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; }
-.form-element-field { width: 100%; padding: 12px 16px; background: #04040a; border: 1px solid #27273d; border-radius: 10px; color: #fff; outline: none; font-family: 'Rajdhani'; font-size: 1.1rem; }.form-element-field:focus { border-color: var(--neon-pink); }
-.modal-action-row { display: flex; gap: 15px; }
-.modal-click-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 900; text-transform: uppercase; }
-.btn-confirm-action { background: var(--neon-cyan); color: #000; }
-.btn-close-action { background: #1e1e33; color: #fff; }
-@keyframes identityPulse {
-0% { text-shadow: 0 0 10px var(--neon-cyan); }
-100% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 35px var(--neon-purple); }
-}
+    <script>
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        window.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        // Cursor Shrink/Expand effects on active clickable tags
+        document.querySelectorAll('a, button, .card, input').forEach(elem => {
+            elem.addEventListener('mouseenter', () => { cursor.style.width = '24px'; cursor.style.height = '24px'; cursor.style.background = 'transparent'; });
+            elem.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.background = 'var(--red)'; });
+        });
+    </script>
+</body>
+</html>
