@@ -4,145 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --neon-pink: #ff007f; 
-            --neon-blue: #00f0ff; 
-            --neon-purple: #9d00ff;
-            --bg: #0a0b10; 
-            --card-w: 240px; 
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor: none !important; }
-        body { background: var(--bg); color: #fff; overflow-x: hidden; min-height: 100vh; }
-        
-        /* Vibrant Moving Cyber Background */
-        .bg-animate { 
-            position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; 
-            background: linear-gradient(125deg, #0d0116 0%, #030a1c 50%, #000000 100%);
-        }
-        .bg-glow {
-            position: fixed; width: 600px; height: 600px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,0,127,0.15) 0%, transparent 70%);
-            top: -200px; right: -200px; animation: floatGlow 15s infinite alternate ease-in-out;
-            pointer-events: none; z-index: -1;
-        }
-        .bg-glow-2 {
-            position: fixed; width: 500px; height: 500px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, transparent 70%);
-            bottom: -100px; left: -100px; animation: floatGlow 20s infinite alternate-reverse ease-in-out;
-            pointer-events: none; z-index: -1;
-        }
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-80px, 50px) scale(1.2); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Custom Neon Cursor */
-        #cursor { width: 10px; height: 10px; background: var(--neon-pink); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink); }
-        #cursor-blur { width: 30px; height: 30px; border: 2px solid var(--neon-blue); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 9998; transition: transform 0.08s ease-out; box-shadow: 0 0 10px rgba(0,240,255,0.3); }
-        
-        /* Navbar */
-        nav { display: flex; align-items: center; justify-content: space-between; padding: 25px 5%; position: fixed; width: 100%; z-index: 100; background: linear-gradient(to bottom, rgba(10,11,16,0.9) 0%, transparent 100%); backdrop-filter: blur(5px); }
-        .logo { font-size: 2.3rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,0,127,0.5)); }
-        .search-wrapper { display: flex; gap: 10px; }
-        .search { background: rgba(20,22,32,0.8); border: 2px solid #222538; padding: 10px 20px; border-radius: 30px; color: #fff; outline: none; width: 320px; transition: all 0.3s; font-size: 0.9rem; }
-        .search:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0,240,255,0.4); width: 400px; }
+        body {
+            background: radial-gradient(circle at center, #1a1528 0%, #0d0b14 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-        /* Billboard Hero Banner */
-        .hero { height: 60vh; display: flex; flex-direction: column; justify-content: center; padding: 0 5%; background: linear-gradient(to top, var(--bg) 0%, transparent 90%); position: relative; overflow: hidden; }
-        .hero-content { position: relative; z-index: 2; margin-top: 80px; }
-        .hero h1 { font-size: 4.5rem; font-weight: 900; margin-bottom: 10px; line-height: 1; text-shadow: 0 0 20px rgba(157,0,255,0.6); }
-        .hero p { max-width: 550px; color: #b4b9d0; margin-bottom: 25px; font-size: 1.05rem; line-height: 1.5; }
-        .btn { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); color: white; font-weight: bold; border: none; padding: 12px 30px; border-radius: 30px; font-size: 1rem; box-shadow: 0 0 15px rgba(255,0,127,0.4); transition: 0.3s; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,0,127,0.7); }
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 540px;
+            padding: 20px;
+            z-index: 2;
+        }
 
-        /* Netflix Content Rows & Headers */
-        .row { padding: 0 5% 40px 5%; position: relative; }
-        .row h2 { font-size: 1.5rem; margin-bottom: 18px; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
-        .row h2::before { content:''; display:inline-block; width:4px; height:20px; background: var(--neon-pink); border-radius: 2px; box-shadow: 0 0 8px var(--neon-pink); }
-        
-        /* Functional Scroll Shelves */
-        .slider-container { position: relative; display: flex; align-items: center; }
-        .slider { display: flex; gap: 18px; overflow-x: auto; padding: 15px 5px; scroll-behavior: smooth; width: 100%; }
-        .slider::-webkit-scrollbar { height: 6px; }
-        .slider::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-        .slider::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .slider::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
-        
-        /* Premium Scale Hover Game Cards */
-        .card { flex: 0 0 var(--card-w); height: 145px; background: #121420; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid #1e2238; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s, box-shadow 0.4s; text-decoration: none; color: inherit; }
-        .card:hover { transform: scale(1.18); z-index: 10; box-shadow: 0 15px 30px rgba(0,240,255,0.25); border-color: var(--neon-blue); }
-        .card-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.4s; }
-        .card:hover .card-img { transform: scale(1.05); filter: brightness(0.5); }
-        .card-info { position: absolute; bottom: 0; padding: 15px; width: 100%; opacity: 0; background: linear-gradient(to top, rgba(10,11,16,1) 0%, transparent 100%); transition: opacity 0.3s; font-size: 0.85rem; font-weight: bold; }
-        .card:hover .card-info { opacity: 1; }
-        .card-tag { font-size: 0.7rem; color: var(--neon-blue); text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ff007f, #7f00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 0px 30px rgba(127, 0, 255, 0.3);
+        }
 
-        /* Left/Right Shelf Navigation Buttons */
-        .scroll-btn { position: absolute; background: rgba(10,11,16,0.85); border: 1px solid #222538; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; top: 50%; transform: translateY(-50%); z-index: 20; transition: 0.2s; visibility: hidden; }
-        .slider-container:hover .scroll-btn { visibility: visible; }
-        .scroll-btn:hover { background: white; color: black; border-color: white; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
-        .scroll-left { left: -20px; }
-        .scroll-right { right: -20px; }
+        p {
+            color: #9d9aa7;
+            font-size: 1rem;
+            margin-bottom: 35px;
+        }
+
+        form {
+            width: 100%;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        input:focus {
+            border-color: #7f00ff;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 20px rgba(127, 0, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        input::placeholder {
+            color: #625f6e;
+        }
+
+        .glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #7f00ff;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+        }
     </style>
+    
+    <!-- CORE SCRIPTS REQUIRED BY THE CONTAINER DEPLOYMENT -->
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
 </head>
 <body>
 
-    <div class="bg-animate"></div>
-    <div class="bg-glow"></div>
-    <div class="bg-glow-2"></div>
-    <div id="cursor"></div>
-    <div id="cursor-blur"></div>
+    <div class="glow"></div>
 
-    <!-- Header Navigation -->
-    <nav>
-        <div class="logo">Genesis</div>
-        <div class="search-wrapper">
-            <input type="text" class="search" placeholder="Type a URL or search DuckDuckGo securely...">
-        </div>
-    </nav>
-
-    <!-- Main Billboard Hero Area -->
-    <div class="hero">
-        <div class="hero-content">
-            <h1>GENESIS NETWORK</h1>
-            <p>Stream fully unblocked titles and encrypted applications hidden behind advanced backend cloud loops.</p>
-            <div><button class="btn" id="hero-launch">▶ Open Web Engine</button></div>
-        </div>
+    <div class="container">
+        <h1>GENESIS</h1>
+        <p>Enter a URL or search query to browse freely.</p>
+        
+        <form id="uv-form">
+            <!-- DuckDuckGo Query Template Injection Link -->
+            <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+            <input id="uv-address" type="text" placeholder="Search DuckDuckGo or type a URL..." autocomplete="off">
+        </form>
     </div>
 
-    <!-- SECTION 1: Games List -->
-    <div class="row">
-        <h2>Premium Core Games</h2>
-        <div class="slider-container">
-            <button class="scroll-btn scroll-left" onclick="slide(this, -1)">‹</button>
-            <div class="slider">
-                <a href="games/minecraft/" class="card">
-                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                    <div class="card-info"><div>Eaglercraft 1.8.8</div><div class="card-tag">Sandbox</div></div>
-                </a>
-                <a href="games/slope/" class="card">
-                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                    <div class="card-info"><div>Slope Client</div><div class="card-tag">Arcade</div></div>
-                </a>
-                <a href="games/retro/" class="card">
-                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                    <div class="card-info"><div>Retro Emulator</div><div class="card-tag">Console</div></div>
-                </a>
-            </div>
-            <button class="scroll-btn scroll-right" onclick="slide(this, 1)">›</button>
-        </div>
-    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('uv-form');
+            const address = document.getElementById('uv-address');
+            const searchEngine = document.getElementById('uv-search-engine');
 
-    <!-- SECTION 2: Extra Core Apps -->
-    <div class="row">
-        <h2>Encrypted Frameworks</h2>
-        <div class="slider-container">
-            <button class="scroll-btn scroll-left" onclick="slide(this, -1)">‹</button>
-            <div class="slider">
-                <div class="card" onclick="launchProxy('https://duckduckgo.com')">
-                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
-                    <div class="card-info"><div>DuckDuckGo Browser</div><div class="card-tag">Search Engine</div></div>
-                </div>
-                <div class="card">
-                    <div class="card-img" style="background-image: url('https://unsplash.com');"></div>
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                let url = address.value.trim();
+                
+                // Formats search into DuckDuckGo natively inside the sandbox context
+                if (!isUrl(url)) {
+                    url = searchEngine.value.replace('%s', encodeURIComponent(url));
+                } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+                    url = 'https://' + url;
+                }
+
+                if ('serviceWorker' in navigator) {
+                    try {
+                        // Dynamically links into the ultraviolet setup config values
+                        await navigator.serviceWorker.register('uv/uv.sw.js', {
+                            scope: __uv$config.prefix
+                        });
+                        
+                        // Forces page transition inside the same active browser window
+                        window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+                    } catch (err) {
+                        alert('Could not start proxy session. Check your Railway runtime logs.');
+                        console.error(err);
+                    }
+                } else {
+                    alert('Service workers are disabled or unsupported by your web browser.');
+                }
+            });
+
+            function isUrl(val = '') {
+                if (/^http(s?):\/\//.test(val)) return true;
+                const reg = /^(([a-zA-Z0-9#_$-]+)\.)+([a-zA-Z]{2,63})/;
+                return reg.test(val);
+            }
+        });
+    </script>
+</body>
+</html>
